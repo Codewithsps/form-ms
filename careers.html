@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Medcrew Surgicals | Careers</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          orange: '#f2622a',
+          'orange-deep': '#d94f1e',
+          bg: '#11001f',
+          bg2: 'rgba(255,255,255,0.03)',
+          border: 'rgba(255,255,255,0.08)',
+          muted: 'rgba(255,255,255,0.42)',
+          faint: 'rgba(242,98,42,0.10)',
+        }
+      },
+      fontFamily: {
+        sans: ['"DM Sans"', 'sans-serif'],
+      },
+      animation: {
+        'fade-up': 'fadeUp 0.5s ease both',
+        'fade-in': 'fadeIn 0.4s ease both',
+      },
+      keyframes: {
+        fadeUp: {
+          '0%': { opacity: '0', transform: 'translateY(14px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { background: #11001f; }
+
+  /* Subtle noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+
+  /* Glow orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+  select option { background: #1a0030; }
+
+  .role-row { transition: background 0.2s ease; }
+  .role-row:hover { background: rgba(242,98,42,0.06); }
+
+  .upload-zone { transition: border-color 0.2s ease, background 0.2s ease; }
+  .upload-zone:hover { border-color: rgba(242,98,42,0.45); background: rgba(242,98,42,0.04); }
+  .upload-zone.drag-over { border-color: #f2622a; background: rgba(242,98,42,0.08); }
+
+  /* stagger delays */
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.12s; }
+  .stagger-3 { animation-delay: 0.19s; }
+  .stagger-4 { animation-delay: 0.26s; }
+  .stagger-5 { animation-delay: 0.33s; }
+  .stagger-6 { animation-delay: 0.40s; }
+
+  input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.22); }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: rgba(242,98,42,0.5) !important; box-shadow: 0 0 0 3px rgba(242,98,42,0.08); }
+
+  .btn-submit { transition: opacity 0.2s, transform 0.1s; }
+  .btn-submit:hover { opacity: 0.88; }
+  .btn-submit:active { transform: scale(0.98); }
+</style>
+</head>
+<body class="relative min-h-screen font-sans text-white">
+
+  <!-- Ambient glow orbs -->
+  <div class="orb w-96 h-96 bg-orange-600 opacity-[0.07]" style="top:-80px;left:-120px;"></div>
+  <div class="orb w-72 h-72 bg-purple-800 opacity-[0.09]" style="bottom:20%;right:-60px;"></div>
+
+  <div class="relative z-10 max-w-2xl mx-auto px-5 sm:px-8 py-16 sm:py-20 lg:py-24">
+
+    <!-- ── HERO ── -->
+    <div class="mb-14 animate-fade-up -mt-10">
+      <p class="text-[11px] tracking-[2.5px] uppercase font-semibold text-[#f2622a] mb-4">Careers</p>
+      <h1 class="text-[clamp(30px,6vw,46px)] font-light leading-[1.12] text-white">
+        Work with<br/>
+        <strong class="font-semibold">Medcrew Surgicals</strong>
+      </h1>
+      <p class="mt-4 text-sm text-white/40 leading-relaxed max-w-md">
+        We're a lean team supplying precision surgical instruments across India. If you care about healthcare and want to grow fast, we'd love to hear from you.
+      </p>
+    </div>
+
+    <!-- ── ROLE LIST ── -->
+    <div class="border-t border-white/[0.08]">
+
+      <div class="role-row animate-fade-up stagger-1 flex items-center justify-between gap-4 px-0 py-4 border-b border-white/[0.08] cursor-pointer rounded-lg px-3 -mx-3"
+           onclick="pick('Territory Sales Manager','Sales · New Delhi · Full-time')">
+        <div class="flex flex-col gap-1">
+          <span class="text-[15px] font-medium text-white flex items-center gap-2">
+            Territory Sales Manager
+            <span class="text-[10px] font-bold tracking-wide uppercase text-[#f2622a] bg-[rgba(242,98,42,0.1)] px-2 py-0.5 rounded-full">Hiring</span>
+          </span>
+          <span class="text-[12px] text-white/40">Sales · New Delhi · Full-time</span>
+        </div>
+        <svg class="w-4 h-4 text-white/30 flex-shrink-0 transition-transform duration-200 role-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+
+     
+
+     
+
+      <div class="role-row animate-fade-up stagger-4 flex items-center justify-between gap-4 px-0 py-4 border-b border-white/[0.08] cursor-pointer rounded-lg px-3 -mx-3"
+           onclick="pick('Logistics & Supply Chain Coordinator','Operations · New Delhi · Full-time')">
+        <div class="flex flex-col gap-1">
+          <span class="text-[15px] font-medium text-white">Logistics &amp; Supply Chain Coordinator</span>
+          <span class="text-[12px] text-white/40">Operations · New Delhi · Full-time</span>
+        </div>
+        <svg class="w-4 h-4 text-white/30 flex-shrink-0 transition-transform duration-200 role-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+
+    </div>
+
+    <!-- ── DIVIDER ── -->
+    <div class="h-px bg-white/[0.08] my-12"></div>
+
+    <!-- ── APPLICATION FORM ── -->
+    <div class="animate-fade-up stagger-5">
+      <p id="formTitle" class="text-sm font-semibold text-white mb-1">Apply now</p>
+      <p id="formDesc" class="text-sm text-white/40 leading-relaxed mb-8">Select a role above or send us your profile — we'll reach out when something fits.</p>
+
+      <div id="theForm" class="space-y-5">
+
+        <!-- Full name -->
+        <div>
+          <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Full name</label>
+          <input id="fname" type="text" placeholder="Your name"
+            class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200"/>
+        </div>
+
+        <!-- Email + Phone -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Email</label>
+            <input id="femail" type="email" placeholder="you@email.com"
+              class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200"/>
+          </div>
+          <div>
+            <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Phone</label>
+            <input id="fphone" type="tel" placeholder="+91 98765 43210"
+              class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200"/>
+          </div>
+        </div>
+
+        <!-- Role + Experience -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Role applying for</label>
+            <select id="frole"
+              class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200 appearance-none pr-9">
+              <option value="">Select a role</option>
+              <option>Territory Sales Manager</option>
+              <option>Medical Device Application Specialist</option>
+              <option>Digital Marketing Executive</option>
+              <option>Logistics &amp; Supply Chain Coordinator</option>
+              <option>General / Open application</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Experience</label>
+            <select id="fexp"
+              class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200 appearance-none pr-9">
+              <option value="">Select</option>
+              <option>Less than 1 year</option>
+              <option>1–3 years</option>
+              <option>3–5 years</option>
+              <option>5+ years</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Why Medcrew? <span class="normal-case tracking-normal font-normal opacity-60">(optional)</span></label>
+          <textarea id="fmsg" placeholder="A short note about yourself…" rows="4"
+            class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans resize-none leading-relaxed transition-all duration-200"></textarea>
+        </div>
+
+        <!-- Resume upload -->
+        <div>
+          <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Resume / CV</label>
+          <div class="upload-zone border border-dashed border-white/[0.15] rounded-xl p-6 text-center cursor-pointer"
+               id="uploadZone"
+               onclick="document.getElementById('ffile').click()"
+               ondragover="handleDragOver(event)"
+               ondragleave="handleDragLeave(event)"
+               ondrop="handleDrop(event)">
+            <input type="file" id="ffile" accept=".pdf,.doc,.docx" class="hidden" onchange="showFile(this)"/>
+            <div class="flex flex-col items-center gap-2">
+              <svg id="uploadIcon" class="w-7 h-7 text-white/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+              </svg>
+              <p class="text-sm text-white/40"><span class="text-[#f2622a]">Browse file</span> or drag &amp; drop</p>
+              <p class="text-[11px] text-white/20">PDF or DOC · max 5 MB</p>
+              <p id="fname2" class="text-xs text-[#f2622a] hidden mt-1 font-medium"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button id="submitBtn" onclick="submitForm()"
+          class="btn-submit w-full mt-2 bg-[#f2622a] text-white font-semibold text-sm py-4 rounded-xl tracking-wide">
+          Send Application
+        </button>
+
+      </div>
+
+      <!-- Success state -->
+      <div id="successMsg" class="hidden text-center py-16 animate-fade-in">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[rgba(242,98,42,0.12)] mb-5">
+          <svg class="w-7 h-7 text-[#f2622a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-white mb-2">Application received!</h3>
+        <p class="text-sm text-white/40 leading-relaxed">Thank you for reaching out. We'll review your profile<br class="hidden sm:block"/> and get back to you within 3–5 working days.</p>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  // Role click — populate select and scroll to form
+  function pick(role, meta) {
+    document.getElementById('frole').value = role;
+    document.getElementById('formTitle').textContent = 'Apply — ' + role;
+    document.getElementById('formDesc').textContent = meta;
+    const form = document.getElementById('theForm');
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // brief flash on select
+    const sel = document.getElementById('frole');
+    sel.style.borderColor = 'rgba(242,98,42,0.6)';
+    setTimeout(() => sel.style.borderColor = '', 600);
+  }
+
+  // File input display
+  function showFile(input) {
+    if (input.files && input.files[0]) {
+      const el = document.getElementById('fname2');
+      el.textContent = '✓ ' + input.files[0].name;
+      el.classList.remove('hidden');
+    }
+  }
+
+  // Drag-and-drop
+  function handleDragOver(e) {
+    e.preventDefault();
+    document.getElementById('uploadZone').classList.add('drag-over');
+  }
+  function handleDragLeave() {
+    document.getElementById('uploadZone').classList.remove('drag-over');
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('uploadZone').classList.remove('drag-over');
+    const dt = e.dataTransfer;
+    if (dt.files.length) {
+      const fileInput = document.getElementById('ffile');
+      // assign dropped file
+      const el = document.getElementById('fname2');
+      el.textContent = '✓ ' + dt.files[0].name;
+      el.classList.remove('hidden');
+    }
+  }
+
+  // Form validation + submit
+  function submitForm() {
+    const name  = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const role  = document.getElementById('frole').value;
+    const btn   = document.getElementById('submitBtn');
+
+    if (!name || !email || !role) {
+      btn.textContent = 'Please fill required fields';
+      btn.classList.add('opacity-50');
+      btn.style.background = 'rgba(255,255,255,0.1)';
+      setTimeout(() => {
+        btn.textContent = 'Send Application';
+        btn.classList.remove('opacity-50');
+        btn.style.background = '#f2622a';
+      }, 2200);
+      return;
+    }
+
+    // Loading state
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    btn.classList.add('opacity-60');
+
+    setTimeout(() => {
+      document.getElementById('theForm').style.display = 'none';
+      const msg = document.getElementById('successMsg');
+      msg.classList.remove('hidden');
+    }, 900);
+  }
+
+  // Arrow hover: move arrow right on row hover
+  document.querySelectorAll('.role-row').forEach(row => {
+    const arrow = row.querySelector('.role-arrow');
+    row.addEventListener('mouseenter', () => {
+      arrow.style.transform = 'translateX(4px)';
+      arrow.style.color = '#f2622a';
+    });
+    row.addEventListener('mouseleave', () => {
+      arrow.style.transform = '';
+      arrow.style.color = '';
+    });
+  });
+</script>
+</body>
+</html>
