@@ -512,6 +512,80 @@
       flex-shrink: 0;
     }
 
+    /* ── NAVBAR ── */
+    .navbar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 3px;
+    }
+    .nav-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-brand-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -0.2px;
+    }
+    .nav-brand-sub {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+    .nav-divider {
+      width: 1px;
+      height: 28px;
+      background: var(--border);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .nav-badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .nav-badge.internal {
+      background: rgba(242,98,42,0.1);
+      border: 1px solid rgba(242,98,42,0.25);
+      color: var(--orange);
+    }
+    .nav-badge.tool {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -526,11 +600,27 @@
 
   <div class="container">
 
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="nav-left">
+        <img src="https://medcrewsurgicals.in/img/ms.gif" alt="MS" class="nav-logo" onerror="this.style.display='none'"/>
+        <div class="nav-brand">
+          <span class="nav-brand-name">Medcrew Surgicals</span>
+          <span class="nav-brand-sub">/ inventory</span>
+        </div>
+        <div class="nav-divider"></div>
+      </div>
+      <div class="nav-right">
+        <span class="nav-badge internal">Internal Tool</span>
+       
+      </div>
+    </nav>
+
     <!-- HEADER -->
-    <header class style="animation: fadeUp 0.4s ease both;">
-      <p class="eyebrow">Internal Tool</p>
-      <h1>Product<br/><strong>Entry Form</strong></h1>
-      <p>Add products and sync directly to Google Sheets</p>
+    <header style="padding: 40px 0 32px; animation: fadeUp 0.4s ease both;">
+      <p class="eyebrow">Product Entry</p>
+      <h1>Add products<br/><strong>instantly.</strong></h1>
+      <p>Fill in the details below and sync directly to Google Sheets.</p>
     </header>
 
     <!-- GOOGLE SHEET CONFIG -->
