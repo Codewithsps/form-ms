@@ -1,974 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Medcrew Surgicals | Inventory</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Medcrew Surgicals | Careers</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          orange: '#f2622a',
+          'orange-deep': '#d94f1e',
+          bg: '#11001f',
+          bg2: 'rgba(255,255,255,0.03)',
+          border: 'rgba(255,255,255,0.08)',
+          muted: 'rgba(255,255,255,0.42)',
+          faint: 'rgba(242,98,42,0.10)',
+        }
+      },
+      fontFamily: {
+        sans: ['"DM Sans"', 'sans-serif'],
+      },
+      animation: {
+        'fade-up': 'fadeUp 0.5s ease both',
+        'fade-in': 'fadeIn 0.4s ease both',
+      },
+      keyframes: {
+        fadeUp: {
+          '0%': { opacity: '0', transform: 'translateY(14px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { background: #11001f; }
 
-    :root {
-      --bg: #11001f;
-      --surface: rgba(255,255,255,0.03);
-      --surface2: rgba(255,255,255,0.05);
-      --border: rgba(255,255,255,0.08);
-      --border-hover: rgba(242,98,42,0.45);
-      --orange: #f2622a;
-      --orange-deep: #d94f1e;
-      --orange-faint: rgba(242,98,42,0.10);
-      --green: #3ed98a;
-      --red: #ff4d6d;
-      --text: #ffffff;
-      --muted: rgba(255,255,255,0.42);
-      --muted2: rgba(255,255,255,0.22);
-      --radius: 16px;
-    }
+  /* Subtle noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 0;
-    }
+  /* Glow orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-    /* Noise texture */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 0;
-    }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+  select option { background: #1a0030; }
 
-    /* Glow orbs */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .orb-1 { width: 420px; height: 420px; background: #c2510f; opacity: 0.07; top: -100px; left: -140px; }
-    .orb-2 { width: 300px; height: 300px; background: #5b21b6; opacity: 0.09; bottom: 15%; right: -80px; }
+  .role-row { transition: background 0.2s ease; }
+  .role-row:hover { background: rgba(242,98,42,0.06); }
 
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 720px;
-      margin: 0 auto;
-    }
+  .upload-zone { transition: border-color 0.2s ease, background 0.2s ease; }
+  .upload-zone:hover { border-color: rgba(242,98,42,0.45); background: rgba(242,98,42,0.04); }
+  .upload-zone.drag-over { border-color: #f2622a; background: rgba(242,98,42,0.08); }
 
-    /* ── HEADER ── */
-    header {
-      padding: 48px 0 40px;
-    }
-    .eyebrow {
-      font-size: 11px;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      font-weight: 600;
-      color: var(--orange);
-      margin-bottom: 14px;
-    }
-    header h1 {
-      font-size: clamp(28px, 5.5vw, 42px);
-      font-weight: 300;
-      line-height: 1.12;
-      color: var(--text);
-      letter-spacing: -0.5px;
-    }
-    header h1 strong { font-weight: 600; }
-    header p {
-      margin-top: 10px;
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 400px;
-    }
+  /* stagger delays */
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.12s; }
+  .stagger-3 { animation-delay: 0.19s; }
+  .stagger-4 { animation-delay: 0.26s; }
+  .stagger-5 { animation-delay: 0.33s; }
+  .stagger-6 { animation-delay: 0.40s; }
 
-    /* ── CONFIG CARD ── */
-    .config-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      margin-bottom: 20px;
-      position: relative;
-      overflow: hidden;
-      animation: fadeUp 0.4s ease both 0.05s;
-    }
-    .config-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--orange), #ff9066);
-    }
-    .config-label {
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      font-weight: 600;
-      color: var(--orange);
-      margin-bottom: 14px;
-    }
+  input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.22); }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: rgba(242,98,42,0.5) !important; box-shadow: 0 0 0 3px rgba(242,98,42,0.08); }
 
-    .connection-status {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 12px;
-      padding: 6px 14px;
-      border-radius: 20px;
-    }
-    .status-pill.connected {
-      background: rgba(62,217,138,0.1);
-      border: 1px solid rgba(62,217,138,0.3);
-      color: var(--green);
-    }
-    .status-pill.disconnected {
-      background: rgba(242,98,42,0.1);
-      border: 1px solid rgba(242,98,42,0.3);
-      color: var(--orange);
-    }
-    .status-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: currentColor;
-      animation: pulse 1.8s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
-
-    .url-display {
-      font-size: 12px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 9px 14px;
-      margin-top: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .url-text {
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: var(--orange);
-      font-size: 12px;
-    }
-    .btn-edit-url {
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--muted);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
-      padding: 5px 12px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-    .btn-edit-url:hover { border-color: var(--orange); color: var(--orange); }
-
-    .edit-url-panel { display: none; margin-top: 12px; }
-    .edit-url-panel.open { display: block; }
-    .edit-url-panel input {
-      width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 1.5px solid var(--orange);
-      border-radius: 10px;
-      padding: 11px 14px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      outline: none;
-    }
-    .edit-url-panel input::placeholder { color: var(--muted2); }
-    .edit-url-actions { display: flex; gap: 8px; margin-top: 8px; }
-    .btn-save-url {
-      padding: 8px 18px;
-      background: var(--orange);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .btn-save-url:hover { opacity: 0.88; }
-    .btn-cancel-url {
-      padding: 8px 18px;
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .config-hint {
-      margin-top: 10px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-    .config-hint a { color: var(--orange); text-decoration: none; }
-    .config-hint a:hover { text-decoration: underline; }
-
-    /* ── FORM CARD ── */
-    .form-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      animation: fadeUp 0.4s ease both 0.12s;
-    }
-
-    .fields-grid {
-      display: grid;
-      gap: 20px;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 580px) {
-      .fields-grid { grid-template-columns: 1fr 1fr; }
-      .field-full { grid-column: 1 / -1; }
-    }
-
-    .field { display: flex; flex-direction: column; gap: 8px; }
-    .field label {
-      font-size: 11px;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      font-weight: 600;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .label-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--orange);
-      display: inline-block;
-      flex-shrink: 0;
-    }
-    .label-dot.green { background: var(--green); }
-    .optional-tag {
-      font-size: 10px;
-      letter-spacing: 0.5px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      padding: 1px 8px;
-      border-radius: 10px;
-      font-weight: 400;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-
-    .input-wrap { position: relative; }
-    .input-wrap .prefix {
-      position: absolute;
-      left: 14px; top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 15px;
-      pointer-events: none;
-    }
-    .input-wrap input {
-      width: 100%;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 13px 14px 13px 36px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    }
-    .input-wrap input.no-prefix { padding-left: 14px; }
-    .input-wrap input::placeholder { color: var(--muted2); }
-    .input-wrap input:focus {
-      border-color: rgba(242,98,42,0.5);
-      background: rgba(242,98,42,0.04);
-      box-shadow: 0 0 0 3px rgba(242,98,42,0.08);
-    }
-    .input-wrap input.optional-input { border-style: dashed; }
-    .input-wrap input.optional-input:focus { border-style: solid; }
-
-    /* Profit bar */
-    .profit-bar {
-      grid-column: 1 / -1;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .profit-label {
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      font-weight: 600;
-      color: var(--muted);
-    }
-    .profit-pct { font-size: 12px; color: var(--muted); margin-top: 3px; }
-    .profit-value {
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--green);
-      transition: color 0.3s;
-      letter-spacing: -0.5px;
-    }
-    .profit-value.negative { color: var(--red); }
-
-    /* Buttons */
-    .btn-row {
-      margin-top: 28px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      flex: 1;
-      min-width: 140px;
-      padding: 14px 24px;
-      border-radius: 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      outline: none;
-      transition: opacity 0.2s, transform 0.1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .btn-primary {
-      background: var(--orange);
-      color: #fff;
-    }
-    .btn-primary:hover { opacity: 0.88; }
-    .btn-primary:active { transform: scale(0.98); }
-    .btn-secondary {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-    }
-    .btn-secondary:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
-
-    /* Status messages */
-    .status-msg {
-      margin-top: 14px;
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      display: none;
-      align-items: center;
-      gap: 10px;
-    }
-    .status-msg.success {
-      display: flex;
-      background: rgba(62,217,138,0.08);
-      border: 1px solid rgba(62,217,138,0.25);
-      color: var(--green);
-    }
-    .status-msg.error {
-      display: flex;
-      background: rgba(255,77,109,0.08);
-      border: 1px solid rgba(255,77,109,0.25);
-      color: var(--red);
-    }
-    .status-msg.loading {
-      display: flex;
-      background: rgba(242,98,42,0.08);
-      border: 1px solid rgba(242,98,42,0.2);
-      color: var(--orange);
-    }
-
-    /* Table */
-    .table-section { margin-top: 32px; animation: fadeUp 0.4s ease both 0.22s; }
-    .section-title {
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-weight: 600;
-      color: var(--muted);
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-    }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    thead th {
-      background: rgba(255,255,255,0.03);
-      padding: 12px 16px;
-      text-align: left;
-      font-size: 10px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      font-weight: 600;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.15s;
-    }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: rgba(242,98,42,0.04); }
-    tbody td { padding: 12px 16px; white-space: nowrap; }
-    .td-profit { color: var(--green); font-weight: 500; }
-    .td-profit.neg { color: var(--red); }
-    .td-name { font-weight: 500; }
-    .empty-state {
-      text-align: center;
-      padding: 44px;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.5px;
-    }
-
-    /* Setup guide */
-    #setup-guide {
-      margin-top: 14px;
-      padding: 16px;
-      background: rgba(242,98,42,0.05);
-      border-radius: 10px;
-      border: 1px solid rgba(242,98,42,0.15);
-      font-size: 12px;
-      line-height: 2;
-      color: rgba(255,255,255,0.6);
-    }
-    #setup-guide a { color: var(--orange); text-decoration: none; }
-    #setup-guide code { color: var(--green); }
-    #setup-guide pre {
-      margin-top: 8px;
-      background: rgba(0,0,0,0.4);
-      padding: 14px;
-      border-radius: 8px;
-      font-size: 11px;
-      overflow-x: auto;
-      color: rgba(255,255,255,0.8);
-      white-space: pre-wrap;
-      font-family: 'DM Mono', 'Courier New', monospace;
-    }
-    .btn-copy-script {
-      margin-top: 10px;
-      padding: 7px 16px;
-      background: rgba(242,98,42,0.12);
-      border: 1px solid rgba(242,98,42,0.3);
-      border-radius: 8px;
-      color: var(--orange);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-copy-script:hover { background: rgba(242,98,42,0.2); }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid transparent;
-      border-top-color: currentColor;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      flex-shrink: 0;
-    }
-
-    /* ── NAVBAR ── */
-    .navbar-wrap {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      border-bottom: 1px solid var(--border);
-      background: rgba(17,0,31,0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .navbar {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 28px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .nav-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      object-fit: contain;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      padding: 3px;
-    }
-    .nav-brand {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .nav-brand-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1;
-      letter-spacing: -0.2px;
-    }
-    .nav-brand-sub {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.3px;
-    }
-    .nav-divider {
-      width: 1px;
-      height: 28px;
-      background: var(--border);
-    }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .nav-badge {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 20px;
-    }
-    .nav-badge.internal {
-      background: rgba(242,98,42,0.1);
-      border: 1px solid rgba(242,98,42,0.25);
-      color: var(--orange);
-    }
-    .nav-badge.tool {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+  .btn-submit { transition: opacity 0.2s, transform 0.1s; }
+  .btn-submit:hover { opacity: 0.88; }
+  .btn-submit:active { transform: scale(0.98); }
+</style>
 </head>
-<body>
+<body class="relative min-h-screen font-sans text-white">
 
-  <!-- Ambient orbs -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+  <!-- Ambient glow orbs -->
+  <div class="orb w-96 h-96 bg-orange-600 opacity-[0.07]" style="top:-80px;left:-120px;"></div>
+  <div class="orb w-72 h-72 bg-purple-800 opacity-[0.09]" style="bottom:20%;right:-60px;"></div>
 
-  <!-- FULL WIDTH NAVBAR -->
-  <div class="navbar-wrap">
-    <nav class="navbar">
-      <div class="nav-left">
-        <img src="https://medcrewsurgicals.in/img/ms.gif" alt="MS" class="nav-logo" onerror="this.style.display='none'"/>
-        <div class="nav-brand">
-          <span class="nav-brand-name">Medcrew Surgicals</span>
-          <span class="nav-brand-sub">/ inventory</span>
+  <div class="relative z-10 max-w-2xl mx-auto px-5 sm:px-8 py-16 sm:py-20 lg:py-24">
+
+    <!-- ── HERO ── -->
+    <div class="mb-14 animate-fade-up -mt-10">
+      <p class="text-[11px] tracking-[2.5px] uppercase font-semibold text-[#f2622a] mb-4">Careers</p>
+      <h1 class="text-[clamp(30px,6vw,46px)] font-light leading-[1.12] text-white">
+        Work with<br/>
+        <strong class="font-semibold">Medcrew Surgicals</strong>
+      </h1>
+      <p class="mt-4 text-sm text-white/40 leading-relaxed max-w-md">
+        We're a lean team supplying precision surgical instruments across India. If you care about healthcare and want to grow fast, we'd love to hear from you.
+      </p>
+    </div>
+
+    <!-- ── ROLE LIST ── -->
+    <div class="border-t border-white/[0.08]">
+
+      <div class="role-row animate-fade-up stagger-1 flex items-center justify-between gap-4 px-0 py-4 border-b border-white/[0.08] cursor-pointer rounded-lg px-3 -mx-3"
+           onclick="pick('Territory Sales Manager','Sales · New Delhi · Full-time')">
+        <div class="flex flex-col gap-1">
+          <span class="text-[15px] font-medium text-white flex items-center gap-2">
+            Sales Manager
+            <span class="text-[10px] font-bold tracking-wide uppercase text-[#f2622a] bg-[rgba(242,98,42,0.1)] px-2 py-0.5 rounded-full">Hiring</span>
+          </span>
+          <span class="text-[12px] text-white/40">Sales · New Delhi · Full-time</span>
         </div>
-        <div class="nav-divider"></div>
+        <svg class="w-4 h-4 text-white/30 flex-shrink-0 transition-transform duration-200 role-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </div>
-      <div class="nav-right">
-        <span class="nav-badge internal">Internal Tool</span>
-        <!-- <span class="nav-badge tool">Inventory Manager</span> -->
+
+     
+
+     
+
+      <div class="role-row animate-fade-up stagger-4 flex items-center justify-between gap-4 px-0 py-4 border-b border-white/[0.08] cursor-pointer rounded-lg px-3 -mx-3"
+           onclick="pick('Logistics & Supply Chain Coordinator','Operations · New Delhi · Full-time')">
+        <div class="flex flex-col gap-1">
+          <span class="text-[15px] font-medium text-white">Logistics &amp; Supply Chain Coordinator</span>
+          <span class="text-[12px] text-white/40">Operations · New Delhi · Full-time</span>
+        </div>
+        <svg class="w-4 h-4 text-white/30 flex-shrink-0 transition-transform duration-200 role-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </div>
-    </nav>
+
+    </div>
+
+    <!-- ── DIVIDER ── -->
+    <div class="h-px bg-white/[0.08] my-12"></div>
+
+    <!-- ── APPLICATION FORM ── -->
+    <div class="animate-fade-up stagger-5">
+      <p id="formTitle" class="text-sm font-semibold text-white mb-1">Apply now</p>
+      <p id="formDesc" class="text-sm text-white/40 leading-relaxed mb-8">Select a role above or send us your profile — we'll reach out when something fits.</p>
+
+      <div id="theForm" class="space-y-5">
+
+        <!-- Full name -->
+        <div>
+          <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Full name</label>
+          <input id="fname" type="text" placeholder="Your name"
+            class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200"/>
+        </div>
+
+        <!-- Email + Phone -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Email</label>
+            <input id="femail" type="email" placeholder="you@email.com"
+              class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200"/>
+          </div>
+          <div>
+            <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Phone</label>
+            <input id="fphone" type="tel" placeholder="+91 98765 43210"
+              class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200"/>
+          </div>
+        </div>
+
+        <!-- Role + Experience -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Role applying for</label>
+            <select id="frole"
+              class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200 appearance-none pr-9">
+              <option value="">Select a role</option>
+              <option> Sales Manager</option>
+              
+              <option disabled>General / Open application</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Experience</label>
+            <select id="fexp"
+              class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans transition-all duration-200 appearance-none pr-9">
+              <option value="">Select</option>
+              <option>Less than 1 year</option>
+              <option>1–3 years</option>
+              <option>3–5 years</option>
+              <option>5+ years</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Why Medcrew? <span class="normal-case tracking-normal font-normal opacity-60">(optional)</span></label>
+          <textarea id="fmsg" placeholder="A short note about yourself…" rows="4"
+            class="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white font-sans resize-none leading-relaxed transition-all duration-200"></textarea>
+        </div>
+
+        <!-- Resume upload -->
+        <div>
+          <label class="block text-[11px] tracking-[1.2px] uppercase font-semibold text-white/40 mb-2">Resume / CV</label>
+          <div class="upload-zone border border-dashed border-white/[0.15] rounded-xl p-6 text-center cursor-pointer"
+               id="uploadZone"
+               onclick="document.getElementById('ffile').click()"
+               ondragover="handleDragOver(event)"
+               ondragleave="handleDragLeave(event)"
+               ondrop="handleDrop(event)">
+            <input type="file" id="ffile" accept=".pdf,.doc,.docx" class="hidden" onchange="showFile(this)"/>
+            <div class="flex flex-col items-center gap-2">
+              <svg id="uploadIcon" class="w-7 h-7 text-white/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+              </svg>
+              <p class="text-sm text-white/40"><span class="text-[#f2622a]">Browse file</span> or drag &amp; drop</p>
+              <p class="text-[11px] text-white/20">PDF or DOC · max 5 MB</p>
+              <p id="fname2" class="text-xs text-[#f2622a] hidden mt-1 font-medium"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button id="submitBtn" onclick="submitForm()"
+          class="btn-submit w-full mt-2 bg-[#f2622a] text-white font-semibold text-sm py-4 rounded-xl tracking-wide">
+          Send Application
+        </button>
+
+      </div>
+
+      <!-- Success state -->
+      <div id="successMsg" class="hidden text-center py-16 animate-fade-in">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[rgba(242,98,42,0.12)] mb-5">
+          <svg class="w-7 h-7 text-[#f2622a]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-white mb-2">Application received!</h3>
+        <p class="text-sm text-white/40 leading-relaxed">Thank you for reaching out. We'll review your profile<br class="hidden sm:block"/> and get back to you within 3–5 working days.</p>
+      </div>
+
+    </div>
   </div>
 
-  <div class="container" style="padding: 0 20px 40px;">
-
-    <!-- HEADER -->
-    <header style="padding: 40px 0 32px; animation: fadeUp 0.4s ease both;">
-      <p class="eyebrow">Product Entry</p>
-      <h1>Add products<br/><strong>instantly.</strong></h1>
-      <p>Fill in the details below and sync directly to Google Sheets.</p>
-    </header>
-
-    <!-- GOOGLE SHEET CONFIG -->
-    <div class="config-card">
-      <div class="config-label">Google Sheets Connection</div>
-
-      <div class="connection-status">
-        <span class="status-pill connected" id="connectionPill">
-          <span class="status-dot"></span>
-          Connected to Google Sheets
-        </span>
-        <button class="btn-edit-url" onclick="toggleEditUrl()">✎ Change URL</button>
-      </div>
-
-      <div class="url-display" id="urlDisplay">
-        <span class="url-text" id="urlText">—</span>
-      </div>
-
-      <div class="edit-url-panel" id="editUrlPanel">
-        <input type="text" id="sheetUrlInput" placeholder="Paste your Google Apps Script Web App URL here…"/>
-        <div class="edit-url-actions">
-          <button class="btn-save-url" onclick="saveUrl()">✓ Save URL</button>
-          <button class="btn-cancel-url" onclick="toggleEditUrl()">Cancel</button>
-        </div>
-      </div>
-
-      <div class="config-hint" style="margin-top:12px;">
-        ⓘ Auto-connected to your Google Sheet.
-        <a href="#" onclick="toggleGuide(event)">How to set it up →</a>
-      </div>
-
-      <div id="setup-guide" style="display:none;">
-        <strong style="color:var(--orange);">Setup Steps:</strong><br>
-        1. Open <a href="https://sheets.google.com" target="_blank">Google Sheets</a> → create a new sheet<br>
-        2. Add headers: <code>Date | Product Name | Price (MRP) | Quantity | Buy Price | Sell Price | Profit | Margin%</code><br>
-        3. Go to <strong>Extensions → Apps Script</strong><br>
-        4. Paste the script below, save → <strong>Deploy → New deployment → Web App</strong><br>
-        5. Set "Who has access" to <strong>Anyone</strong> → Deploy → copy the URL<br>
-        6. Click <strong>"✎ Change URL"</strong> above and paste → Save<br><br>
-        <strong style="color:var(--orange);">Apps Script Code:</strong>
-        <pre id="scriptCode">function doPost(e) {
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var data = JSON.parse(e.postData.contents);
-    var buy  = parseFloat(data.buyPrice)  || 0;
-    var sell = parseFloat(data.sellPrice) || 0;
-    var qty  = parseFloat(data.quantity)  || 1;
-    var profit = (sell - buy) * qty;
-    var margin = buy > 0 ? ((sell - buy) / buy * 100).toFixed(1) + "%" : "0%";
-    sheet.appendRow([
-      new Date().toLocaleString('en-IN'),
-      data.productName,
-      data.price !== '' ? parseFloat(data.price) : '',
-      qty, buy, sell, profit, margin
-    ]);
-    return ContentService
-      .createTextOutput(JSON.stringify({status:"success"}))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({status:"error", message: err.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}</pre>
-        <button class="btn-copy-script" onclick="copyScript()">Copy Script</button>
-      </div>
-    </div>
-
-    <!-- FORM -->
-    <div class="form-card">
-      <div class="fields-grid">
-
-        <!-- Product Name -->
-        <div class="field field-full">
-          <label><span class="label-dot"></span> Product Name</label>
-          <div class="input-wrap">
-            <input type="text" id="productName" class="no-prefix" placeholder="e.g. Ligasure, Guide wires" autocomplete="off"/>
-          </div>
-        </div>
-
-        <!-- Price MRP -->
-        <div class="field">
-          <label>
-            <span class="label-dot"></span> Price (MRP)
-            <span class="optional-tag">optional</span>
-          </label>
-          <div class="input-wrap">
-            <span class="prefix">₹</span>
-            <input type="number" id="price" class="optional-input" min="0" step="0.01" placeholder="0.00"/>
-          </div>
-        </div>
-
-        <!-- Quantity -->
-        <div class="field">
-          <label><span class="label-dot"></span> Quantity</label>
-          <div class="input-wrap">
-            <span class="prefix">#</span>
-            <input type="number" id="quantity" min="1" step="1" placeholder="1"/>
-          </div>
-        </div>
-
-        <!-- Buy Price -->
-        <div class="field">
-          <label><span class="label-dot"></span> Buy Price</label>
-          <div class="input-wrap">
-            <span class="prefix">₹</span>
-            <input type="number" id="buyPrice" min="0" step="0.01" placeholder="0.00"/>
-          </div>
-        </div>
-
-        <!-- Sell Price -->
-        <div class="field">
-          <label><span class="label-dot green"></span> Sell Price</label>
-          <div class="input-wrap">
-            <span class="prefix">₹</span>
-            <input type="number" id="sellPrice" min="0" step="0.01" placeholder="0.00"/>
-          </div>
-        </div>
-
-        <!-- Profit Bar -->
-        <div class="profit-bar">
-          <div>
-            <div class="profit-label">Estimated Profit</div>
-            <div class="profit-pct" id="profitPct">— %</div>
-          </div>
-          <div class="profit-value" id="profitDisplay">₹ 0.00</div>
-        </div>
-
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">
-          ↑ Add to Sheet
-        </button>
-        <button class="btn btn-secondary" onclick="resetForm()">
-          ✕ Clear
-        </button>
-      </div>
-
-      <div class="status-msg" id="statusMsg"></div>
-    </div>
-
-    <!-- SESSION LOG TABLE -->
-    <div class="table-section">
-      <div class="section-title">Session Log</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Product</th>
-              <th>Qty</th>
-              <th>MRP</th>
-              <th>Buy</th>
-              <th>Sell</th>
-              <th>Profit</th>
-              <th>Margin</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-            <tr><td colspan="8" class="empty-state">No products added yet</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div><!-- /container -->
-
 <script>
-  let currentSheetUrl = localStorage.getItem('sheetUrl') || '';
+  // Role click — populate select and scroll to form
+  function pick(role, meta) {
+    document.getElementById('frole').value = role;
+    document.getElementById('formTitle').textContent = 'Apply — ' + role;
+    document.getElementById('formDesc').textContent = meta;
+    const form = document.getElementById('theForm');
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // brief flash on select
+    const sel = document.getElementById('frole');
+    sel.style.borderColor = 'rgba(242,98,42,0.6)';
+    setTimeout(() => sel.style.borderColor = '', 600);
+  }
 
-  function updateUrlDisplay() {
-    const urlText = document.getElementById('urlText');
-    const pill    = document.getElementById('connectionPill');
-    const isSet   = currentSheetUrl && currentSheetUrl.startsWith('http');
-    if (isSet) {
-      urlText.textContent = currentSheetUrl;
-      pill.className = 'status-pill connected';
-      pill.innerHTML = '<span class="status-dot"></span> Connected to Google Sheets';
-    } else {
-      urlText.textContent = 'No URL configured — click "Change URL" to set one';
-      pill.className = 'status-pill disconnected';
-      pill.innerHTML = '<span class="status-dot"></span> Not connected';
+  // File input display
+  function showFile(input) {
+    if (input.files && input.files[0]) {
+      const el = document.getElementById('fname2');
+      el.textContent = '✓ ' + input.files[0].name;
+      el.classList.remove('hidden');
     }
   }
 
-  function toggleEditUrl() {
-    const panel = document.getElementById('editUrlPanel');
-    const input = document.getElementById('sheetUrlInput');
-    const isOpen = panel.classList.contains('open');
-    if (!isOpen) {
-      input.value = currentSheetUrl || '';
-      panel.classList.add('open');
-      input.focus();
-    } else {
-      panel.classList.remove('open');
-    }
-  }
-
-  function saveUrl() {
-    const val = document.getElementById('sheetUrlInput').value.trim();
-    if (!val) { alert('Please enter a valid URL.'); return; }
-    currentSheetUrl = val;
-    localStorage.setItem('sheetUrl', val);
-    document.getElementById('editUrlPanel').classList.remove('open');
-    updateUrlDisplay();
-    showStatus('success', 'Google Sheets URL updated successfully!');
-  }
-
-  updateUrlDisplay();
-
-  const buyInput  = document.getElementById('buyPrice');
-  const sellInput = document.getElementById('sellPrice');
-  const profitEl  = document.getElementById('profitDisplay');
-  const pctEl     = document.getElementById('profitPct');
-
-  function calcProfit() {
-    const buy  = parseFloat(buyInput.value)  || 0;
-    const sell = parseFloat(sellInput.value) || 0;
-    const qty  = parseInt(document.getElementById('quantity').value) || 1;
-    const profit = (sell - buy) * qty;
-    const pct    = buy > 0 ? ((sell - buy) / buy * 100).toFixed(1) : 0;
-    profitEl.textContent = '₹ ' + profit.toFixed(2);
-    profitEl.className   = 'profit-value' + (profit < 0 ? ' negative' : '');
-    pctEl.textContent    = buy > 0 ? pct + ' %' : '— %';
-  }
-
-  buyInput.addEventListener('input', calcProfit);
-  sellInput.addEventListener('input', calcProfit);
-  document.getElementById('quantity').addEventListener('input', calcProfit);
-
-  let rows = [];
-
-  function renderTable() {
-    const tbody = document.getElementById('tableBody');
-    if (!rows.length) {
-      tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No products added yet</td></tr>';
-      return;
-    }
-    tbody.innerHTML = rows.map((r, i) => {
-      const neg = r.profit < 0;
-      const mrp = (r.price !== '' && r.price !== null && !isNaN(r.price))
-        ? '₹' + Number(r.price).toFixed(2)
-        : '<span style="color:var(--muted)">—</span>';
-      return `<tr>
-        <td style="color:var(--muted)">${i+1}</td>
-        <td class="td-name">${r.productName}</td>
-        <td>${r.quantity}</td>
-        <td>${mrp}</td>
-        <td style="color:var(--orange)">₹${Number(r.buyPrice).toFixed(2)}</td>
-        <td style="color:var(--green)">₹${Number(r.sellPrice).toFixed(2)}</td>
-        <td class="td-profit${neg?' neg':''}">₹${r.profit.toFixed(2)}</td>
-        <td class="${neg?'td-profit neg':'td-profit'}">${r.marginPercent}%</td>
-      </tr>`;
-    }).join('');
-  }
-
-  function showStatus(type, msg) {
-    const el = document.getElementById('statusMsg');
-    el.className = 'status-msg ' + type;
-    el.innerHTML = type === 'loading'
-      ? `<div class="spinner"></div>${msg}`
-      : `<span>${type === 'success' ? '✓' : '✗'}</span> ${msg}`;
-    if (type !== 'loading') setTimeout(() => el.style.display = 'none', 4000);
-  }
-
-  async function submitForm() {
-    const name     = document.getElementById('productName').value.trim();
-    const priceRaw = document.getElementById('price').value.trim();
-    const price    = priceRaw !== '' ? parseFloat(priceRaw) : '';
-    const qty      = parseInt(document.getElementById('quantity').value) || 1;
-    const buy      = parseFloat(buyInput.value);
-    const sell     = parseFloat(sellInput.value);
-
-    if (!name || isNaN(buy) || isNaN(sell)) {
-      showStatus('error', 'Please fill Product Name, Buy Price and Sell Price.');
-      return;
-    }
-
-    const profit = parseFloat(((sell - buy) * qty).toFixed(2));
-    const margin = buy > 0 ? parseFloat(((sell - buy) / buy * 100).toFixed(1)) : 0;
-    const now    = new Date().toLocaleString('en-IN');
-
-    const payload = {
-      date: now, productName: name, price, quantity: qty,
-      buyPrice: buy, sellPrice: sell, profit, marginPercent: margin
-    };
-
-    const url = currentSheetUrl;
-    const isValidUrl = url && url.startsWith('http');
-
-    if (isValidUrl) {
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      showStatus('loading', 'Sending to Google Sheets…');
-      try {
-        await fetch(url, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        showStatus('success', 'Product added to Google Sheets!');
-      } catch (err) {
-        showStatus('error', 'Failed to reach Google Sheets. Check your URL.');
-        btn.disabled = false;
-        return;
-      }
-      btn.disabled = false;
-    } else {
-      showStatus('success', 'Saved locally (no Sheet URL configured).');
-    }
-
-    rows.push({ ...payload });
-    renderTable();
-    resetForm();
-  }
-
-  function resetForm() {
-    ['productName','price','quantity','buyPrice','sellPrice'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    profitEl.textContent = '₹ 0.00';
-    profitEl.className   = 'profit-value';
-    pctEl.textContent    = '— %';
-  }
-
-  function toggleGuide(e) {
+  // Drag-and-drop
+  function handleDragOver(e) {
     e.preventDefault();
-    const g = document.getElementById('setup-guide');
-    g.style.display = g.style.display === 'none' ? 'block' : 'none';
+    document.getElementById('uploadZone').classList.add('drag-over');
+  }
+  function handleDragLeave() {
+    document.getElementById('uploadZone').classList.remove('drag-over');
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('uploadZone').classList.remove('drag-over');
+    const dt = e.dataTransfer;
+    if (dt.files.length) {
+      const fileInput = document.getElementById('ffile');
+      // assign dropped file
+      const el = document.getElementById('fname2');
+      el.textContent = '✓ ' + dt.files[0].name;
+      el.classList.remove('hidden');
+    }
   }
 
-  function copyScript() {
-    const txt = document.getElementById('scriptCode').textContent;
-    navigator.clipboard.writeText(txt).then(() => {
-      showStatus('success', 'Apps Script code copied!');
-    });
+  // Form validation + submit
+  function submitForm() {
+    const name  = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const role  = document.getElementById('frole').value;
+    const btn   = document.getElementById('submitBtn');
+
+    if (!name || !email || !role) {
+      btn.textContent = 'Please fill required fields';
+      btn.classList.add('opacity-50');
+      btn.style.background = 'rgba(255,255,255,0.1)';
+      setTimeout(() => {
+        btn.textContent = 'Send Application';
+        btn.classList.remove('opacity-50');
+        btn.style.background = '#f2622a';
+      }, 2200);
+      return;
+    }
+
+    // Loading state
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    btn.classList.add('opacity-60');
+
+    setTimeout(() => {
+      document.getElementById('theForm').style.display = 'none';
+      const msg = document.getElementById('successMsg');
+      msg.classList.remove('hidden');
+    }, 900);
   }
+
+  // Arrow hover: move arrow right on row hover
+  document.querySelectorAll('.role-row').forEach(row => {
+    const arrow = row.querySelector('.role-arrow');
+    row.addEventListener('mouseenter', () => {
+      arrow.style.transform = 'translateX(4px)';
+      arrow.style.color = '#f2622a';
+    });
+    row.addEventListener('mouseleave', () => {
+      arrow.style.transform = '';
+      arrow.style.color = '';
+    });
+  });
 </script>
 </body>
 </html>
